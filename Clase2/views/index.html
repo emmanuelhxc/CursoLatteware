@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> {{ title }}</title>
+</head>
+<body>
+<h1>{{ title }}</h1>
+
+<form method="POST" action="/add-to-do">
+	<p>
+	<input  name="name" type="text" placeholder="Nombre de la tarea"  /></p>
+	<p>
+	<input  name="description" type="text" placeholder="Descripción de la tarea"  /></p>
+	<p>
+	<button type="submit">Crear</button>	
+	</p>
+</form>
+
+<ul>
+	
+	{% for dat in data %}
+
+		<li> {{ dat.name | capitalize  }} | {{ dat.description | capitalize  }} </li>
+		<!-- <li> {{ dat.name | first }} </li>
+		<li> {{ dat.description | join(', ') }} </li> -->
+	
+	{% endfor%}
+</ul>
+</body>
+</html>
