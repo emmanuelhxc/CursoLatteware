@@ -31,11 +31,13 @@ app.set('view cache',false)
 
 swig.setDefaults({cache: false}) //activar cache en prod
 
+//termina config swig
+
 // agregamos body parser a express
 
 app.use(bodyParser.urlencoded({extended:false}))
 
-//termina config swig
+
 
 app.get('/',function(req,res){
 
@@ -55,7 +57,6 @@ app.get('/',function(req,res){
 })
 
 app.post('/add-to-do',function(req,res){
-	// res.send('Información mandada',req.body );
 
 	ToDo.create(req.body,function(err,doc){
 		if(err){
