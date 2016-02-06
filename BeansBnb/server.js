@@ -49,12 +49,13 @@ app.engine('html',swig.renderFile)
 
 app.set('view engine','html')
 app.set('views',__dirname + '/views')
-app.use(express.static(__dirname + '/public'));
 app.set('view cache',false)
 
-app.use(bodyParser.urlencoded({extended:false}))
+//archivos estaticos a express
+app.use('/static', express.static(__dirname + '/static'));
 
-// bodyparser a express
+//configurar body-parser a express
+app.use(bodyParser.urlencoded({extended:false}))
 
 swig.setDefaults({cache: false}) //activar cache en prod
 
