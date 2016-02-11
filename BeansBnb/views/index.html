@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{title }}</title>
-
-	<link rel="stylesheet" type="text/css" href="../static/styles.css">
-
+	<title>test</title>
 </head>
 <body>
-<header>
-<h1>Welcome to | {{ title }}</h1>
-	
-</header>
-<section>
-
-
-<a href="/add-listing"><h2>Crear Anuncio</h2></a>
-
-
-<h2>Cities:</h2>
-
-<a href="/city/mexico-city">Ciudad de México</a><br/>
-<a href="/city/guadalajara">Guadalajara</a><br/>
-<a href="/city/monterrey">Monterrey</a><br/>
-
-</section>
-
-<footer>
-	
-</footer>
-
+<a href="/log-in">Inicia Sesión</a>
+<p/>
+<a href="/sign-up">Registrate</a>
+<p/>
+<ul>
+<!-- {% for d in data %}
+  <li{% if loop.first %} class="first"{% endif %}>
+    {{ d.username }} | {{ d.password }} | {{ d.createdOn | date('Y-m-d') }}
+  </li>
+{% endfor %} -->
+{% for d in data %}
+  <li{% if loop.first %} class="first"{% endif %}>
+    {{ d.name }} | {{ d.uuid }} | {{ d.createdOn | date('Y-m-d') }}
+  </li>
+{% endfor %}
+</ul>
 </body>
 </html>

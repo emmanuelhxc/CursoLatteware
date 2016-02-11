@@ -5,7 +5,7 @@
 </head>
 <body>
 <header>
-	<a href="/">Home</a>
+	<a href="/main">Home</a>
 </header>
 <section>
 	<form method="POST" action="/add-to-do">
@@ -19,13 +19,10 @@
 	<p>
 	<select name="city">
 		<option value="-1" selected="selected">Selecciona</option>
-		<option value="1">Ciudad de México</option>
-		<option value="2">Guadalajara</option>
-		<option value="3">Monterrey</option>
+		{% for d in cities %}
+  		  		<option value="{{ d.uuid }}">{{ d.name }}</option>
+		{% endfor %}
 	</select>
-	</p>
-	<p>
-	<input  name="country" type="text" placeholder="Pais"  />
 	</p>
 	<p>
 	<button type="submit">Crear</button>	

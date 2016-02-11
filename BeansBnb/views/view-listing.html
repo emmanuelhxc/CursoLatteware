@@ -6,13 +6,13 @@
 <body>
 <header>
 <h2>Check {{ titleadd | capitalize }}</h2>
-	<a href="/">Home</a>
+	<a href="/main">Home</a>
 	<a href="/add-listing"><h2>Crear Anuncio</h2></a>
 	<a href="/city/{{city}}"><h2>{{ city }}</h2></a>
 </header>
 <section>
 
-<form method="POST" action="/{{data.uuid}}/Update">
+<form method="POST" action="/{{data.uuid}}/update">
 	<p>
 	{{ data.address }}
 	</p>
@@ -24,12 +24,15 @@
 	<p>
 	{{ city }}
 	</p>
+	<p>
+		Creado Por: <a href="/users/{{user.uuid}}"> {{user.displayName}} </a> | Fecha de Creación: {{data.createdOn | date('Y-m-d')}}
+	</p>
 	
 </form>
-<form method="POST" action="/{{data.uuid}}/Remove">
+<form method="POST" action="/{{data.uuid}}/remove">
 <p>
 	<button type="submit">Remove Listing</button>	
-	</p>
+</p>
 </form>
 </section>
 <footer></footer>
