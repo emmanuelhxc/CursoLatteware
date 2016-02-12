@@ -8,7 +8,6 @@
 <h2> Usuario </h2>
 	<a href="/main">Home</a>
 	<a href="/add-listing"><h2>Crear Anuncio</h2></a>
-	<a href="/city/{{city}}"><h2>{{ city }}</h2></a>
 </header>
 <section>
 
@@ -27,7 +26,7 @@
 	<ul>	
 		{% for post in list %}
 
-		<li><a href="/city/{{city}}/{{post.uuid}}"> {{post.title}}	</a>  </li>
+		<li><a href="/city/{{post.city.name}}/{{post.uuid}}"> {{post.title}} en {{post.city.name}}</a>  </li>
 
 		{% endfor%}
 	</ul>

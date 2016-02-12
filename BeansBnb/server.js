@@ -28,11 +28,20 @@ var userSchema = Schema({
 
 var User = mongoose.model('User', userSchema)
 
+var citySchema = Schema({
+	name: String,
+	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
+	createdOn: Date,
+	uuid : {type: String, default: uuid.v4}
+})
+
+var Cities = mongoose.model('city', citySchema)
+
 var toDoSchema = Schema({
 
 	address: String,
-	city: String,
-	createdBy: String,
+	city: {type:Schema.Types.ObjectId, ref:'city'},
+	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
 	createdOn: Date,
 	description: String,
 	modifiedOn: Date,
@@ -41,16 +50,6 @@ var toDoSchema = Schema({
 })
 
 var ToDo = mongoose.model('Todo',toDoSchema);
-
-var citySchema = Schema({
-	name: String,
-	createdBy: String,
-	createdOn: Date,
-	uuid : {type: String, default: uuid.v4}
-})
-
-var Cities = mongoose.model('city', citySchema)
-
 
 
 // Termina la declaracion de modelos
@@ -248,7 +247,7 @@ if(!res.locals.user)
 					return res.send(404, 'Not found')
 			}
 
-			ToDo.find({city: ciudad.uuid}, function (err, doc) {
+			ToDo.find({city: ciudad}, function (err, doc) {
 				if(err){
 					return res.send(500, 'Internal Server Error')
 				}
@@ -277,7 +276,10 @@ if(!res.locals.user)
 	else{
 
 	
-		ToDo.findOne({uuid:req.params.uuid }, function (err, doc) {
+		ToDo
+		.findOne({uuid:req.params.uuid })
+		.populate('createdBy')
+		.exec(function (err, doc) {
 			if(err){
 				return res.send(500, 'Internal Server Error')
 			}
@@ -285,24 +287,14 @@ if(!res.locals.user)
 			if(!doc){
 				return res.send(404, 'Not found')
 			}
-
-			User.findOne({uuid: doc.createdBy}, function(err,user){
-					if(err){
-					return res.send(500, 'Internal Server Error')
-				}
-
-				if(!user){
-					return res.send(404, 'Not found')
-				}
-
-				res.render('view-listing', {
-					city: req.params.name,
-					titleadd : doc.title,
-					title: titlepp,
-					user: user,
-					data:doc
-				})
-			})		
+			
+			res.render('view-listing', {
+				city: req.params.name,
+				titleadd : doc.title,
+				title: titlepp,
+				user: doc.createdBy,
+				data:doc
+			})	
 		})
 	}
 
@@ -378,22 +370,33 @@ app.post('/add-to-do',function(req,res){
 	else
 	{
 
-		ToDo.create({
-
-		title: req.body.title,
-		description: req.body.description,
-		address: req.body.address,
-		city: req.body.city,
-		createdBy: res.locals.user.uuid,
-		createdOn: new Date(),
-		modifiedOn: new Date()
-		
-		},function(err,doc){
+		Cities.findOne({uuid: req.body.city},function(err,ciudad){
 			if(err)
 			{
-				return res.send(500,'Internal Server Error');
+				return res.send(500,'Internal Server Error')
 			}
-			res.redirect('/main')
+			if(!ciudad)
+			{
+				return res.send(400,'Not Found')
+			}
+
+			ToDo.create({
+
+					title: req.body.title,
+					description: req.body.description,
+					address: req.body.address,
+					city: ciudad,
+					createdBy: res.locals.user,
+					createdOn: new Date(),
+					modifiedOn: new Date()
+					
+					},function(err,doc){
+						if(err)
+						{
+							return res.send(500,'Internal Server Error');
+						}
+						res.redirect('/main')
+					})
 		})
 	}
 
@@ -410,47 +413,40 @@ app.get('/users/:uuid',function(req,res){
 
 		User.findOne({uuid:req.params.uuid}, function(err,user){
 
-			if(err)
+		if(err)
+		{
+			return res.send(500,'Internal Server Error')
+		}
+
+		if(!user){
+		return res.send(404, 'Not found')
+
+		}
+		
+	
+		ToDo
+		.find({ createdBy: user })
+		.populate('city')
+		.exec(function (erro,list){
+			
+			if(erro)
 			{
 				return res.send(500,'Internal Server Error')
 			}
 
-			if(!user){
-			return res.send(404, 'Not found')
-
+			if(!list){
+				return res.send(404, 'Not found')
 			}
 
-
-			ToDo.findOne({createdBy: user.uuid},function(erro,list){
-				
-				if(erro)
-				{
-					return res.send(500,'Internal Server Error')
-				}
-
-				if(!list){
-					return res.send(404, 'Not found')
-				}
-
-				Cities.findOne({uuid: list.city},function(error,ciudad){
-					if(error){
-						return res.send(500, 'Internal Server Error')
-					}
-
-					if(!ciudad){
-						return res.send(404, 'Not found')
-					}
-
-
-					res.render('view-user', {
-					city: ciudad.name,
-					title: titlepp,
-					user: user,
-					list: list
-						
-					})
-				})		
-			})
+			console.log(list)
+				res.render('view-user', {
+				city: list.city,
+				title: titlepp,
+				user: user,
+				list: list
+					
+				})
+			})		
 		})
 	}
 })
@@ -477,7 +473,7 @@ app.post('/add-city',function(req,res){
 		Cities.create({
 
 		name: req.body.name,
-		createdBy: res.locals.user.uuid,
+		createdBy: res.locals.user,
 		createdOn: new Date(),
 		
 		},function(err,doc){
@@ -488,7 +484,6 @@ app.post('/add-city',function(req,res){
 			res.redirect('/main')
 		})
 	}
-
 })
 
 
@@ -497,9 +492,9 @@ app.post('/add-city',function(req,res){
 app.listen(3000, function () {
 
 // eliminar Datos
-// User.collection.remove();
-// ToDo.collection.remove();
-// Cities.collection.remove();
+ // User.collection.remove();
+ // ToDo.collection.remove();
+ // Cities.collection.remove();
 
 	console.log('Example app listening on port 3000! ' + new Date())
 })
