@@ -22,7 +22,7 @@ var userSchema = Schema({
 	email: String,
 	displayName: String,
 	password: String,
-	createdOn: Date,
+ 	createdOn: Date,
 	uuid : {type: String, default: uuid.v4}
 })
 
@@ -79,6 +79,9 @@ swig.setDefaults({cache:false})// <-- Cambiar a true en produccion
 
 // Agregamos body parser a express
 app.use( bodyParser.urlencoded({ extended:false }) )
+
+// Adds static assets
+app.use('/assets', express.static('public'));
 
 // Declara tus url handlers en este espacio
 app.use(function (req, res, next) {
@@ -401,6 +404,7 @@ app.post('/add-to-do',function(req,res){
 	}
 
 })
+
 
 app.get('/users/:uuid',function(req,res){
 
