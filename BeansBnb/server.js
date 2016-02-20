@@ -442,7 +442,7 @@ app.get('/users/:uuid',function(req,res){
 				return res.send(404, 'Not found')
 			}
 
-			console.log(list)
+			// console.log(list)
 				res.render('view-user', {
 				city: list.city,
 				title: titlepp,
