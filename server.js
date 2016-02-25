@@ -231,10 +231,10 @@ app.post('/sign-up', function(req, res, next){
 	})
 })
 
-app.post('/log-in', function (req, res){
+app.post('/login', function (req, res){
 	if(!req.body.username || !req.body.password){
 		req.flash('log-in-error', 'To log in you need a username and a password')
-		return res.redirect('/log-in')
+		return res.redirect('/login')
 	}
 
 	User.findOne({username: req.body.username}, function(err, doc){
@@ -244,7 +244,7 @@ app.post('/log-in', function (req, res){
 
 		if(!doc){
 			req.flash('log-in-error', 'Invalid user')
-			return res.redirect('/log-in')
+			return res.redirect('/login')
 		}
 
 		bcrypt.compare(req.body.password, doc.password, function(err, result){

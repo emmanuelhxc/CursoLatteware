@@ -41,25 +41,23 @@
                                 <label for="tw-switch" class="ts-helper"></label>
                             </div>
                         </li>
-
-                        <li class="logo hidden-xs">
-
-                        {% if user %}
-						  	<a href="login"> 
-						  		<label for="login" class="zmdi zmdi-account-circle zmdi-hc-fw"></label>
-						  	 	Bienvenido {{ user.displayName }}
-
-						  	</a>
-						{% else %}
-							<a href="login"> 
-								<label for="login" class="zmdi zmdi-account-add zmdi-hc-fw"></label>
-								 Inicia Sesión
-							</a>
-						{% endif %}
-                        
 						
-                		</li>
-
+						<li class="toggle-width">
+                            <a target="_blank" href="login">
+                            	{% if user %}
+								  		
+							  		<spam for="login"   class="tm-label"> <i class="zmdi zmdi-account-circle zmdi-hc-fw"></i> 
+										Bienvenido {{ user.displayName }}
+							  		</spam>
+							  	{% else %}
+									
+									<spam for="login"   class="tm-label"> <i class="zmdi zmdi-account-circle zmdi-hc-fw"></i> 
+										Inicia Sesión
+							  		</spam>
+									
+								{% endif %}
+                            </a>
+                        </li>
 
 						<li class="dropdown">
                             <a data-toggle="dropdown" href=""><i class="tm-icon zmdi zmdi-more-vert"></i></a>
