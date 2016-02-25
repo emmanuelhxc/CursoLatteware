@@ -1,29 +1,45 @@
+{% extends 'layout.html' %}
+
+<!-- 
 <!DOCTYPE html>
 <html>
 <head>
 	<title>BeansBnb</title>
 	<link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.css">
 </head>
-<body>
-	<div class="container">
+<body> -->
+{% block content %}
 
-		<div class="jumbotron">
-			<h1>BeansBnb</h1>
-		</div>
+<div class="card">
+    <div class="card-header bgm-cyan ch-alt m-b-20">
+        <h2>Ultimos Anuncios 
+        	<!-- <small>Phasellus condimentum ipsum id auctor imperdie</small> -->
+    	</h2>                          
+    </div>
+                                
+    <div class="card-body">
+        <div class="listview">
+
+        	{% for d in todos %}
+            <a class="lv-item" href="/city/{{d.city.name}}/{{d.uuid}}">
+                <div class="media">
+                    <div class="pull-left">
+                        <i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="lv-title"><strong>{{d.title}}</strong> - {{d.city.name}} </div>
+                        <small class="lv-small">{{d.description}} <i>{{d.modifiedOn | date('Y-m-d')}} </i> </small>
+                    </div>
+                </div>
+            </a>
+            {%endfor%}
+            
+        </div>
+    </div>
+</div>
+         
 	
-		<!-- <div class="container"> -->
-			<div class="row maketing">
-				<div class="col-lg-6" >
-					<a href="/log-in">Inicia Sesión</a>
-				</div>
-			
-				<div class="col-lg-6">
-					<a href="/sign-up">Registrate</a>
-				</div>
-			</div>
-		<!-- </div> -->
-
-	</div>
+{% endblock %}
 
 	
 		
@@ -44,5 +60,5 @@
 	{% endfor %}
 	</ul> -->
 	
-</body>
-</html>
+<!-- </body>
+</html> -->

@@ -19,8 +19,8 @@
 	<p>
 	<select name="city">
 		<option value="-1" selected="selected">Selecciona</option>
-		{% for d in cities %}
-  		  		<option value="{{ d.uuid }}">{{ d.name }}</option>
+		{% for d in profiles %}
+  		  		<option value="{{ d.uuid }}">{{ d.profilename }}</option>
 		{% endfor %}
 	</select>
 	</p>

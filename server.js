@@ -22,16 +22,29 @@ var userSchema = Schema({
 	email: String,
 	displayName: String,
 	password: String,
- 	createdOn: Date,
+ 	createdOn: {type:Date, default: new Date()},
+ 	profile: {type:Schema.Types.ObjectId, ref:'Profile'},
 	uuid : {type: String, default: uuid.v4}
 })
 
 var User = mongoose.model('User', userSchema)
 
+var profileSchema = Schema({
+
+	profilename: String,
+	profilecode: Number,
+	createdOn: {type:Date, default: new Date()},
+	uuid: {type: String, default: uuid.v4}
+
+})
+
+var Profile = mongoose.model('Profile', profileSchema)
+
+
 var citySchema = Schema({
 	name: String,
 	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
-	createdOn: Date,
+	createdOn: {type:Date, default: new Date()},
 	uuid : {type: String, default: uuid.v4}
 })
 
@@ -42,7 +55,7 @@ var toDoSchema = Schema({
 	address: String,
 	city: {type:Schema.Types.ObjectId, ref:'city'},
 	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
-	createdOn: Date,
+	createdOn: {type:Date, default: new Date()},
 	description: String,
 	modifiedOn: Date,
 	title: String,
@@ -81,17 +94,25 @@ swig.setDefaults({cache:false})// <-- Cambiar a true en produccion
 app.use( bodyParser.urlencoded({ extended:false }) )
 
 // Adds static assets
-app.use('/assets', express.static('public'));
+app.use('/vendors', express.static('public/vendors/'));
+app.use('/css', express.static('public/css'));
+app.use('/fonts', express.static('public/fonts'));
+app.use('/img', express.static('public/img'));
+app.use('/js', express.static('public/js'));
+app.use('/less', express.static('public/less'));
+app.use('/media', express.static('public/media'));
+
 
 // Declara tus url handlers en este espacio
 app.use(function (req, res, next) {
-	
-	
+
 	if(!req.session.userId){
 		 return next()
 	}
 
-	User.findOne({uuid: req.session.userId}, function(err, user){
+	User.findOne({uuid: req.session.userId})
+	.populate('profile')
+	.exec(function(err, user){
 		if(err){
 			return res.send(500, 'Internal Server Error')
 		}
@@ -100,27 +121,55 @@ app.use(function (req, res, next) {
 
 		next()
 	})
+},function (req, res, next) {
+				
+	Cities.find({},function(err,cities){
 
+		if(err)
+		{
+			return res.send(500,'Internal Server Error')
+		}
+
+		res.locals.citieslist = cities
+		next()
+
+	})
 });
 
 app.get('/',function (req, res) {
 
-res.render('index')
-	
+	// console.log(res.locals.cities)
+	ToDo.find({})
+	.populate('createdBy')
+	.populate('city')
+	.exec(function(err,list){
+
+		res.render('index',{
+
+			user: res.locals.user,
+			cities: res.locals.citieslist,
+			todos: list
+		})
+	})
 })
 
 app.get('/sign-up', function (req, res){
 	var error = res.locals.flash.pop()
 
-	res.render('sign-up', {
-		error: error
+	Profile.find({},function(err,profiles){
+		res.render('sign-up',{
+						title: titlepp,
+						profiles:profiles,
+						error: error
+		})
 	})
 })
 
-app.get('/log-in', function (req, res){
+app.get('/login',function(req, res){
+
 	var error = res.locals.flash.pop()
 
-	res.render('log-in',{
+	res.render('login',{
 		error: error
 	})
 })
@@ -130,7 +179,16 @@ app.get('/log-out', function (req, res){
 	res.redirect('/')
 })
 
-app.post('/sign-up', function (req, res){
+app.post('/sign-up', function(req, res, next){
+	Profile.findOne({profilecode: req.body.profile},function(err,profile){
+		if(err){
+			return res.send(500,'Internal Server Error')
+		}
+
+		res.locals.profile = profile
+		next()
+	})
+},function (req, res){
 	if(!req.body.username || !req.body.password){
 		req.flash('sign-up-error', 'To sign up you need a username and a password')
 		return res.redirect('/sign-up')		
@@ -151,21 +209,25 @@ app.post('/sign-up', function (req, res){
 				return res.send(500, 'Internal Server Error')
 			}
 
-			User.create({
-				username: req.body.username,
-				password: hashedPassword,
-				displayName: req.body.displayname,
-				createdOn: new Date(),
-				email: req.body.email,
-			}, function(err, doc){
-				if(err){
-					return res.send(500, 'Internal Server Error')
-				}
+			
 
-				req.session.userId = doc.uuid
-				res.redirect('/')
+				User.create({
+					username: req.body.username,
+					password: hashedPassword,
+					displayName: req.body.displayname,
+					profile: res.locals.profile,
+					email: req.body.email,
+				}, function(err, doc){
+					if(err){
+						return res.send(500, 'Internal Server Error')
+					}
+
+					req.session.userId = doc.uuid
+					res.redirect('/')
+				
+				
 			})
-		});
+		})
 	})
 })
 
@@ -191,7 +253,8 @@ app.post('/log-in', function (req, res){
 			}
 
 			req.session.userId = doc.uuid
-			res.redirect('/main')
+			// res.redirect('/main')
+			res.redirect('/')
 		})
 	})
 })
@@ -390,7 +453,6 @@ app.post('/add-to-do',function(req,res){
 					address: req.body.address,
 					city: ciudad,
 					createdBy: res.locals.user,
-					createdOn: new Date(),
 					modifiedOn: new Date()
 					
 					},function(err,doc){
@@ -499,6 +561,32 @@ app.listen(3000, function () {
  // User.collection.remove();
  // ToDo.collection.remove();
  // Cities.collection.remove();
+ //Profile.collection.remove();
 
+			// Profile.create({
+
+			// 		profilename: 'Admin',
+			// 		profilecode: 001
+					
+			// 		},function(err,doc){
+			// 			if(err)
+			// 			{
+			// 				return res.send(500,'Internal Server Error');
+			// 			}
+						
+			// 		})
+
+			// Profile.create({
+
+			// 		profilename: 'User',
+			// 		profilecode: 002
+					
+			// 		},function(err,doc){
+			// 			if(err)
+			// 			{
+			// 				return res.send(500,'Internal Server Error');
+			// 			}
+						
+			// 		})
 	console.log('Example app listening on port 3000! ' + new Date())
 })
