@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BeansBnb</title>
+	<link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.css">
+</head>
+<body> -->
+{% block content %}
+
+<div class="card">
+    <div class="card-header bgm-cyan ch-alt m-b-20">
+        <h2>Ultimos Anuncios 
+        	<!-- <small>Phasellus condimentum ipsum id auctor imperdie</small> -->
+    	</h2>                          
+    </div>
+                                
+    <div class="card-body">
+        <div class="listview">
+
+        	{% for d in todos %}
+            <a class="lv-item" href="/city/{{d.city.name}}/{{d.uuid}}">
+                <div class="media">
+                    <div class="pull-left">
+                        <i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="lv-title"><strong>{{d.title}}</strong> - {{d.city.name}} </div>
+                        <small class="lv-small">{{d.description}} <i>{{d.modifiedOn | date('Y-m-d')}} </i> </small>
+                    </div>
+                </div>
+            </a>
+            {%endfor%}
+            
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bgm-cyan ch-alt m-b-20">
+        <h2>Ultimos Citas
+            <!-- <small>Phasellus condimentum ipsum id auctor imperdie</small> -->
+        </h2>                          
+    </div>
+                                
+    <div class="card-body">
+        <div class="listview">
+
+            {% for d in app %}
+            <a class="lv-item" href="/city/{{d.city.name}}/{{d.uuid}}">
+                <div class="media">
+                    <div class="pull-left">
+                        <i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="lv-title"><strong>{{d.title}}</strong> - {{d.customer.name}} </div>
+                        <small class="lv-small">{{d.description}} <i>{{d.date | date('Y-m-d')}} </i> </small>
+                    </div>
+                </div>
+            </a>
+            {%endfor%}
+            
+        </div>
+    </div>
+</div>
+         
+	
+{% endblock %}
+
+	
+		
+	
+
+
+		
+	<!-- <ul>
+	{% for d in data %}
+	  <li{% if loop.first %} class="first"{% endif %}>
+	    {{ d.username }} | {{ d.password }} | {{ d.createdOn | date('Y-m-d') }}
+	  </li>
+	{% endfor %}
+	{% for d in data %}
+	  <li{% if loop.first %} class="first"{% endif %}>
+	    {{ d.name }} | {{ d.uuid }} | {{ d.createdOn | date('Y-m-d') }}
+	  </li>
+	{% endfor %}
+	</ul> -->
+	
+<!-- </body>
+</html> -->
