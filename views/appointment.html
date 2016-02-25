@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+
+ <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+        <link href="vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css" rel="stylesheet">
+        <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">        
+        <link href="vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+        <link href="vendors/bower_components/nouislider/distribute/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link href="vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="vendors/bower_components/chosen/chosen.min.css" rel="stylesheet">
+        <link href="vendors/summernote/dist/summernote.css" rel="stylesheet">
+{% block content %}
+
+<div class="card">
+    <div class="card-header ch-alt">
+        <h2>Agregar Cita <small></small></h2>
+    </div>
+    
+    <div class="card-body card-padding">
+        <form  method="POST" action="">
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" name="name" class="form-control input-sm" placeholder="">
+                    <label class="fg-label">Nombre del Cliente</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="email" name="email" class="form-control input-sm">
+                    <label class="fg-label">Correo Electronico</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" name="telephone" class="form-control input-sm">
+                    <label class="fg-label">Telefono</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" name="titulo" class="form-control input-sm">
+                    <label class="fg-label">Título</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" name="date" class="form-control date-picker">
+                    <label class="fg-label">Fecha</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float">
+                <div class="fg-line">
+                    <textarea class="form-control auto-size input-sm" name="description"></textarea>
+                    <label class="fg-label">Descripción</label>
+                </div>
+            </div>
+            
+            <button class="btn btn-info" type="submit">Guardar</button>
+            <button class="btn btn-link" id="btn-cancel">Cancelar</button>
+        </form>
+    </div>
+</div>
+         
+<script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="vendors/bower_components/autosize/dist/autosize.min.js"></script>
+
+<script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js"></script>
+
+<script src="vendors/bower_components/moment/min/moment.min.js"></script>
+<script src="vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="vendors/bower_components/nouislider/distribute/jquery.nouislider.all.min.js"></script>
+<script src="vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="vendors/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+<script src="vendors/summernote/dist/summernote-updated.min.js"></script>
+
+<script src="vendors/bower_components/chosen/chosen.jquery.min.js"></script>
+<script src="vendors/fileinput/fileinput.min.js"></script>
+<script src="vendors/input-mask/input-mask.min.js"></script>
+<script src="vendors/farbtastic/farbtastic.min.js"></script>
+
+
+<script src="js/functions.js"></script>
+
+
+
+<script type="text/javascript">
+    
+    $('#btn-cancel').click(function(event){
+        event.preventDefault();
+        window.location.href = '/index'; 
+
+    })
+
+</script>
+
+
+	
+{% endblock %}
+
+	
+		

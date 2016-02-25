@@ -37,6 +37,34 @@
         </div>
     </div>
 </div>
+
+<div class="card">
+    <div class="card-header bgm-cyan ch-alt m-b-20">
+        <h2>Ultimos Citas
+            <!-- <small>Phasellus condimentum ipsum id auctor imperdie</small> -->
+        </h2>                          
+    </div>
+                                
+    <div class="card-body">
+        <div class="listview">
+
+            {% for d in app %}
+            <a class="lv-item" href="/city/{{d.city.name}}/{{d.uuid}}">
+                <div class="media">
+                    <div class="pull-left">
+                        <i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="lv-title"><strong>{{d.title}}</strong> - {{d.customer.name}} </div>
+                        <small class="lv-small">{{d.description}} <i>{{d.date | date('Y-m-d')}} </i> </small>
+                    </div>
+                </div>
+            </a>
+            {%endfor%}
+            
+        </div>
+    </div>
+</div>
          
 	
 {% endblock %}

@@ -15,6 +15,7 @@ var titlepp = 'Beans Bnb'
 
 
 mongoose.connect('mongodb://localhost/base-server')
+var SchemaTypes = mongoose.Schema.Types
 
 // Declara tus modelos en este espacio
 var userSchema = Schema({
@@ -39,6 +40,36 @@ var profileSchema = Schema({
 })
 
 var Profile = mongoose.model('Profile', profileSchema)
+
+var appointmentSchema = Schema({
+
+	title: String,
+	description: String,
+	imgurl: String,
+	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
+	modifiedBy: {type:Schema.Types.ObjectId, ref:'User'},
+	createdOn: {type:Date, default: new Date()},
+	date: Date,
+	customer: {type:Schema.Types.ObjectId, ref:'Customer'},
+	modifiedOn: Date,
+	price: Number,
+	uuid: {type: String, default: uuid.v4}
+
+})
+
+var Appointment = mongoose.model('appointment', appointmentSchema)
+
+var customerSchema = Schema({
+	name: String,
+	telephone: Number,
+	email: String,
+	createdBy: {type:Schema.Types.ObjectId, ref:'User'},
+	createdOn: {type:Date, default: new Date()},
+	uuid : {type: String, default: uuid.v4}
+})
+
+var Customer = mongoose.model('Customer', customerSchema)
+
 
 
 var citySchema = Schema({
@@ -144,13 +175,29 @@ app.get('/',function (req, res) {
 	.populate('city')
 	.exec(function(err,list){
 
-		res.render('index',{
+		Appointment.find({})
+		.populate('createdBy')
+		.populate('customer')
+		.exec(function(err,app){
 
-			user: res.locals.user,
-			cities: res.locals.citieslist,
-			todos: list
+				res.render('index',{
+
+				user: res.locals.user,
+				cities: res.locals.citieslist,
+				todos: list,
+				app: app
+			})
+
+
 		})
+
+
+
+		
 	})
+
+
+
 })
 
 app.get('/sign-up', function (req, res){
@@ -551,6 +598,67 @@ app.post('/add-city',function(req,res){
 		})
 	}
 })
+
+app.get('/add-appointment',function(req,res){
+	if(!res.locals.user)
+	{
+		res.redirect('/login')
+	}
+	else
+	{
+		res.render('appointment')
+	
+	}
+})
+
+app.post('/add-appointment',function(req,res){
+	if(!res.locals.user)
+	{
+		res.redirect('/login')
+	}
+	else
+	{
+
+		Customer.create({
+
+			name: req.body.name,
+			telephone: req.body.telephone,
+			email: req.body.email,
+			createdBy: res.locals.user
+
+
+		},function(err,customer){
+			if(err)
+			{
+				return res.send(500,'Internal Server Error');
+			}
+			
+			// var dates = new Date(req.body.date)
+
+			// console.log(dates.getDay())
+
+			// console.log(dates)
+
+			Appointment.create({
+
+				createdBy: res.locals.user,
+				title: req.body.title,
+				description: req.body.description,
+				date: new Date(),
+				customer: customer
+				
+			},function(err,doc){
+					if(err)
+					{
+						return res.send(500,'Internal Server Error');
+					}
+				res.redirect('/')
+			})
+		})
+	}
+})
+
+
 
 
 
